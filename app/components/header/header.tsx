@@ -22,21 +22,22 @@ const Header = () => {
 
     if (!movieInput || !spinner || !movieWrapper) {
       console.error("One of the refs is null");
-      return; // Ensure all refs are not null
+      return;
     }
 
     let movieList = movieInput.value;
-    console.log(movieList);
 
-    movieInput.value = ""; // Clear the input field
+    movieInput.value = "";
     spinner.style.display = "block";
 
     try {
       const response = await fetch(
         `https://www.omdbapi.com/?apikey=897b61cc&s=${movieList}`
       );
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
+      } else {
       }
       const data = await response.json();
 
