@@ -1,4 +1,4 @@
-nav {
+.nav {
   padding: 0 2rem;
   height: 100px;
   display: flex;
@@ -9,17 +9,17 @@ nav {
   margin: 0 auto;
 }
 
-.nav__logo--img--wrapper {
+.nav__logo__img__wrapper {
   width: 200px;
   height: 50px;
 }
 
-.nav__logo--img {
+.nav__logo__img {
   width: 100%;
   height: 100%;
 }
 
-.nav__link--list {
+.nav__link__list {
   display: flex;
   align-items: center;
 }
