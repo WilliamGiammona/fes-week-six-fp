@@ -1,8 +1,10 @@
+// app/components/header/page.tsx
 "use client";
 
+import React, { useRef, FormEvent, useEffect } from "react";
+import { useMovieSearch } from "../../contexts/MovieSearchContext"; // Adjust the import path as needed
 import styles from "./header.module.css";
-import Loading from "./loading";
-import React, { useRef, FormEvent, useState } from "react";
+import Nav from "../nav/nav";
 
 interface Movie {
   Title: string;
@@ -11,36 +13,28 @@ interface Movie {
 }
 
 const Header = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const movieInputRef = useRef<HTMLInputElement>(null);
+  const { movieSearch } = useMovieSearch();
   const spinnerRef = useRef<HTMLDivElement>(null);
   const movieWrapperRef = useRef<HTMLDivElement>(null);
 
-  const movieChoice = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const movieInput = movieInputRef.current;
+  const movieChoice = async () => {
     const spinner = spinnerRef.current;
     const movieWrapper = movieWrapperRef.current;
 
-    if (!movieInput || !spinner || !movieWrapper) {
+    if (!spinner || !movieWrapper) {
       console.error("One of the refs is null");
       return;
     }
 
-    let movieList = movieInput.value;
-
-    movieInput.value = "";
     spinner.style.display = "block";
 
     try {
       const response = await fetch(
-        `https://www.omdbapi.com/?apikey=897b61cc&s=${movieList}`
+        `https://www.omdbapi.com/?apikey=897b61cc&s=${movieSearch}`
       );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
-      } else {
       }
       const data = await response.json();
 
@@ -72,25 +66,26 @@ const Header = () => {
     }
   };
 
+  useEffect(() => {
+    if (movieSearch) {
+      movieChoice();
+    }
+  }, [movieSearch]); // Re-run movieChoice when movieSearch updates
+
   return (
-    <header className={styles.hero}>
-      <h1 className={styles.hero__title}>Browse Our Movies</h1>
-      <form className={styles.hero__form} onSubmit={movieChoice}>
-        <label htmlFor="movieSearch" className={styles.form__label}></label>
-        <input
-          ref={movieInputRef}
-          type="text"
-          id="movieSearch"
-          className={styles.form__input}
-          placeholder="Search by Title"
-        />
-        <button type="submit" className={styles.form__submit__btn}>
-          Submit
-        </button>
-      </form>
-      <div ref={spinnerRef} className={styles.hero__movies__loading}></div>
-      <div ref={movieWrapperRef} className={styles.hero__movies__wrapper}></div>
-    </header>
+    <>
+      <Nav />
+      <header className={styles.hero}>
+        <h1 className={styles.hero__title}>
+          Selection For &quot; {movieSearch} &quot;
+        </h1>
+        <div ref={spinnerRef} className={styles.hero__movies__loading}></div>
+        <div
+          ref={movieWrapperRef}
+          className={styles.hero__movies__wrapper}
+        ></div>
+      </header>
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./nav.module.css";
+import Link from "next/link";
 
 const nav = () => {
   return (
@@ -14,7 +15,12 @@ const nav = () => {
         />
       </figure>
       <ul className={styles.nav__link__list}>
-        <li className={styles.nav__link}>HOME</li>
+        <li className={styles.nav__link}>
+          <Link href="/">Home</Link>
+        </li>
+        <li className={styles.nav__link}>
+          <Link href="/components/header">Find Your Movie</Link>
+        </li>
       </ul>
     </nav>
   );
