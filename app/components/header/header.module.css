@@ -33,7 +33,7 @@
   outline: 2px solid #242424;
 }
 
-.form__submit--btn {
+.form__submit__btn {
   display: flex;
   align-self: center;
   border-radius: 20px;
@@ -45,11 +45,11 @@
   cursor: pointer;
 }
 
-.form__submit--btn:hover {
+.form__submit__btn:hover {
   background-color: #0069d9;
 }
 
-.hero__movies--wrapper {
+.hero__movies__wrapper {
   margin-top: 4rem;
   width: 100%;
   max-width: 1200px;
@@ -60,7 +60,7 @@
   gap: 10px; /* This sets both row and column gaps */
 }
 
-.hero__movies--movie {
+.hero__movies__movie {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -73,22 +73,22 @@
   transition: all 0.3s ease;
 }
 
-.hero__movies--movie:hover {
+.hero__movies__movie:hover {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   transform: scaleX(1.02);
 }
 
-.hero__movies--movie--poster--img--wrapper {
+.hero__movies__movie__poster__img__wrapper {
   width: 100%;
   height: 70%;
 }
 
-.hero__movies--movie--poster--img {
+.hero__movies__movie__poster__img {
   width: 100%;
   height: 100%;
 }
 
-.hero__movies--title {
+.hero__movies__title {
   margin-top: 0.5rem;
   margin-left: 1rem;
   margin-right: 1rem;
@@ -98,7 +98,7 @@
   font-size: 2rem;
 }
 
-.hero__movies--year {
+.hero__movies__year {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   color: gray;
@@ -119,6 +119,6 @@
   transform-origin: center;
 }
 
-.hero .hero__movies--loading.fas {
+.hero .hero__movies__loading.fas {
   display: none;
 }
