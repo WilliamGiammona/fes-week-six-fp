@@ -1,60 +1,72 @@
+"use client";
+
 import styles from "./header.module.css";
+import React, { useRef, FormEvent } from "react";
 
-const header = () => {
-  // const movieChoice = async (event) => {
-  //   event.preventDefault();
-  //   const movieInput = event.target.elements["movieSearch"];
-  //   let movieList = movieInput.value;
+interface Movie {
+  Title: string;
+  Year: string;
+  Poster: string;
+}
 
-  //   movieInput.value = "";
+const Header = () => {
+  const movieInputRef = useRef<HTMLInputElement>(null);
+  const spinnerRef = useRef<HTMLDivElement>(null);
+  const movieWrapperRef = useRef<HTMLDivElement>(null);
 
-  //   const spinner = document.querySelector(".hero__movies--loading");
-  //   spinner.style.display = "block";
+  const movieChoice = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const movieInput = movieInputRef.current;
+    const spinner = spinnerRef.current;
+    const movieWrapper = movieWrapperRef.current;
 
-  //   try {
-  //     const response = await fetch(
-  //       `https://www.omdbapi.com/?apikey=897b61cc&s=${movieList}`
-  //     );
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
+    if (!movieInput || !spinner || !movieWrapper) {
+      console.error("One of the refs is null");
+      return; // Ensure all refs are not null
+    }
 
-  //     const data = await response.json();
+    let movieList = movieInput.value;
+    console.log(movieList);
 
-  //     // Check if movies are found
-  //     if (!data.Search || data.Search.length === 0) {
-  //       const movieWrapper = document.querySelector(".hero__movies--wrapper");
-  //       movieWrapper.innerHTML =
-  //         "<p>Sorry, no movies with this title found.</p>";
-  //       spinner.style.display = "none";
-  //       return;
-  //     }
+    movieInput.value = ""; // Clear the input field
+    spinner.style.display = "block";
 
-  //     let movieTitles = data.Search.map((movie) => movie.Title);
-  //     let movieYears = data.Search.map((movie) => movie.Year);
-  //     let moviePoster = data.Search.map((movie) => movie.Poster);
+    try {
+      const response = await fetch(
+        `https://www.omdbapi.com/?apikey=897b61cc&s=${movieList}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
 
-  //     const movieWrapper = document.querySelector(".hero__movies--wrapper");
-  //     movieWrapper.innerHTML = "";
+      if (!data.Search || data.Search.length === 0) {
+        movieWrapper.innerHTML =
+          "<p>Sorry, no movies with this title found.</p>";
+        spinner.style.display = "none";
+        return;
+      }
 
-  //     for (let i = 0; i < Math.min(movieTitles.length, 6); i++) {
-  //       movieWrapper.innerHTML += `<div class="hero__movies--movie">
-  //                       <figure class="hero__movies--movie--poster--img--wrapper">
-  //                           <img src="${moviePoster[i]}" alt="movie poster" class="hero__movies--movie--poster--img" />
-  //                       </figure>
-  //                       <h2 class="hero__movies--title">${movieTitles[i]}</h2>
-  //                       <h3 class="hero__movies--year">${movieYears[i]}</h3>
-  //                   </div>`;
-  //     }
+      movieWrapper.innerHTML = data.Search.slice(0, 6)
+        .map(
+          (movie: Movie) => `
+      <div>
+        <figure>
+          <img src="${movie.Poster}" alt="Movie poster" />
+        </figure>
+        <h2>${movie.Title}</h2>
+        <h3>${movie.Year}</h3>
+      </div>
+    `
+        )
+        .join("");
 
-  //     spinner.style.display = "none";
-
-  //     return data;
-  //   } catch (error) {
-  //     console.error("Error fetching data from OMDB API:", error);
-  //     spinner.style.display = "none";
-  //   }
-  // };
+      spinner.style.display = "none";
+    } catch (error) {
+      console.error("Error fetching data from OMDB API:", error);
+      spinner.style.display = "none";
+    }
+  };
 
   return (
     <header className={styles.hero}>
@@ -62,6 +74,7 @@ const header = () => {
       <form className={styles.hero__form} onSubmit={movieChoice}>
         <label htmlFor="movieSearch" className={styles.form__label}></label>
         <input
+          ref={movieInputRef}
           type="text"
           id="movieSearch"
           className={styles.form__input}
@@ -71,12 +84,10 @@ const header = () => {
           Submit
         </button>
       </form>
-      <i
-        className={`${styles.fas} ${styles.faSpinner} ${styles.hero__movies__loading}`}
-      ></i>
-      <div className={styles.hero__movies__wrapper}></div>
+      <div ref={spinnerRef} className={styles.hero__movies__loading}></div>
+      <div ref={movieWrapperRef} className={styles.hero__movies__wrapper}></div>
     </header>
   );
 };
 
-export default header;
+export default Header;
