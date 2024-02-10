@@ -1,7 +1,8 @@
 "use client";
 
 import styles from "./header.module.css";
-import React, { useRef, FormEvent } from "react";
+import Loading from "./loading";
+import React, { useRef, FormEvent, useState } from "react";
 
 interface Movie {
   Title: string;
@@ -10,6 +11,8 @@ interface Movie {
 }
 
 const Header = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [movies, setMovies] = useState<Movie[]>([]);
   const movieInputRef = useRef<HTMLInputElement>(null);
   const spinnerRef = useRef<HTMLDivElement>(null);
   const movieWrapperRef = useRef<HTMLDivElement>(null);
@@ -51,14 +54,14 @@ const Header = () => {
       movieWrapper.innerHTML = data.Search.slice(0, 6)
         .map(
           (movie: Movie) => `
-      <div>
-        <figure>
-          <img src="${movie.Poster}" alt="Movie poster" />
-        </figure>
-        <h2>${movie.Title}</h2>
-        <h3>${movie.Year}</h3>
-      </div>
-    `
+          <div class="${styles.hero__movies__movie}">
+            <figure class="${styles.hero__movies__movie__poster__img__wrapper}">
+              <img class="${styles.hero__movies__movie__poster__img}" src="${movie.Poster}" alt="Movie poster" />
+            </figure>
+            <h2 class="${styles.hero__movies__title}">${movie.Title}</h2>
+            <h3 class="${styles.hero__movies__year}">${movie.Year}</h3>
+          </div>
+        `
         )
         .join("");
 
