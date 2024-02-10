@@ -59,7 +59,7 @@ const header = () => {
   return (
     <header className={styles.hero}>
       <h1 className={styles.hero__title}>Browse Our Movies</h1>
-      <form className={styles.hero__form}>
+      <form className={styles.hero__form} onSubmit={movieChoice}>
         <label htmlFor="movieSearch" className={styles.form__label}></label>
         <input
           type="text"
