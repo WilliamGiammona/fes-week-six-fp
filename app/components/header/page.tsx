@@ -47,7 +47,7 @@ export default function Home() {
     <section id="landing-page" className="landing-page">
       <Nav />
       <header className="hero">
-        <h1 className="hero__title ">Browse Our Movies</h1>
+        <h1 className="hero__title ">You searched for &quot; &quot; </h1>
         <form className="hero__form" onSubmit={handleSubmit}>
           <input
             type="text"
