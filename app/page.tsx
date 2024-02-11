@@ -1,5 +1,7 @@
 "use client";
+
 import { useState } from "react";
+import Image from "next/image";
 
 interface Movie {
   Title: string;
@@ -44,10 +46,11 @@ export default function Home() {
     <section id="landing-page" className="min-h-screen bg-gray-100">
       <nav className="flex justify-between items-center py-4 px-8">
         <figure>
-          <img
+          <Image
             src="https://dev.d24jig8s1lr7n9.amplifyapp.com/img/blinker-icon.4f9b2663.png"
             alt="logo"
-            className="w-40 h-10"
+            width={200}
+            height={50}
           />
         </figure>
         <ul className="flex space-x-4">
@@ -81,7 +84,14 @@ export default function Home() {
                 key={index}
                 className="max-w-sm rounded overflow-hidden shadow-lg"
               >
-                <img className="w-full" src={movie.Poster} alt="Movie poster" />
+                <Image
+                  src={movie.Poster || "/no-image.png"}
+                  alt="Movie poster"
+                  width={500}
+                  height={750}
+                  layout="responsive"
+                  unoptimized={true}
+                />
                 <div className="px-6 py-4">
                   <div className="font-bold text-xl mb-2">{movie.Title}</div>
                   <p className="text-gray-700 text-base">{movie.Year}</p>
