@@ -1,90 +1,102 @@
-// // app/components/header/page.tsx
-// "use client";
+"use client";
 
-// import React, { useRef, FormEvent, useEffect } from "react";
-// import styles from "./header.module.css";
-// import Nav from "../nav/nav";
+import { useState } from "react";
+import Image from "next/image";
 
-// interface Movie {
-//   Title: string;
-//   Year: string;
-//   Poster: string;
-// }
+interface Movie {
+  Title: string;
+  Year: string;
+  Poster: string;
+}
 
-// const Header = () => {
-//   const spinnerRef = useRef<HTMLDivElement>(null);
-//   const movieWrapperRef = useRef<HTMLDivElement>(null);
+export default function Home() {
+  const [movieSearch, setMovieSearch] = useState("");
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-//   const movieChoice = async () => {
-//     const spinner = spinnerRef.current;
-//     const movieWrapper = movieWrapperRef.current;
+  const fetchMovies = async (search: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `https://www.omdbapi.com/?apikey=897b61cc&s=${search}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      if (data.Search) {
+        setMovies(data.Search.slice(0, 6));
+      } else {
+        setMovies([]);
+      }
+    } catch (error) {
+      console.error("Error fetching data from OMDB API:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-//     if (!spinner || !movieWrapper) {
-//       console.error("One of the refs is null");
-//       return;
-//     }
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    fetchMovies(movieSearch);
+    setMovieSearch(""); // Clear the search field
+  };
 
-//     spinner.style.display = "block";
-
-//     try {
-//       const response = await fetch(
-//         `https://www.omdbapi.com/?apikey=897b61cc&s=${}`
-//       );
-
-//       if (!response.ok) {
-//         throw new Error(`HTTP error! status: ${response.status}`);
-//       }
-//       const data = await response.json();
-
-//       if (!data.Search || data.Search.length === 0) {
-//         movieWrapper.innerHTML =
-//           "<p>Sorry, no movies with this title found.</p>";
-//         spinner.style.display = "none";
-//         return;
-//       }
-
-//       movieWrapper.innerHTML = data.Search.slice(0, 6)
-//         .map(
-//           (movie: Movie) => `
-//           <div class="${styles.hero__movies__movie}">
-//             <figure class="${styles.hero__movies__movie__poster__img__wrapper}">
-//               <img class="${styles.hero__movies__movie__poster__img}" src="${movie.Poster}" alt="Movie poster" />
-//             </figure>
-//             <h2 class="${styles.hero__movies__title}">${movie.Title}</h2>
-//             <h3 class="${styles.hero__movies__year}">${movie.Year}</h3>
-//           </div>
-//         `
-//         )
-//         .join("");
-
-//       spinner.style.display = "none";
-//     } catch (error) {
-//       console.error("Error fetching data from OMDB API:", error);
-//       spinner.style.display = "none";
-//     }
-//   };
-
-//   return (
-//     <header className={styles.hero}>
-//       <h1 className={styles.hero__title}>Browse Our Movies</h1>
-//       <form className={styles.hero__form}>
-//         <label htmlFor="movieSearch" className={styles.form__label}></label>
-//         <input
-//           type="text"
-//           id="movieSearch"
-//           className={styles.form__input}
-//           placeholder="Search by Title"
-//         />
-//         <button type="submit" className={styles.form__submit__btn}>
-//           Submit
-//         </button>
-//       </form>
-//       <i
-//         className={`${styles.fas} ${styles.faSpinner} ${styles.hero__movies__loading}`}
-//       ></i>
-//       <div className={styles.hero__movies__wrapper}></div>
-//     </header>
-//   );
-// };
-
-// export default Header;
+  return (
+    <section id="landing-page" className="landing-page">
+      <nav>
+        <figure className="nav__logo__img__wrapper">
+          <Image
+            src="https://dev.d24jig8s1lr7n9.amplifyapp.com/img/blinker-icon.4f9b2663.png"
+            alt="logo"
+            width={200}
+            height={50}
+            className="nav__logo__img"
+          />
+        </figure>
+        <ul className="nav__link__list">
+          <li className="nav__link">HOME</li>
+        </ul>
+      </nav>
+      <header className="hero">
+        <h1 className="hero__title ">Browse Our Movies</h1>
+        <form className="hero__form" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            id="movieSearch"
+            className="form__input"
+            placeholder="Search by Title"
+            value={movieSearch}
+            onChange={(e) => setMovieSearch(e.target.value)}
+          />
+          <button type="submit" className="form__submit__btn">
+            Submit
+          </button>
+        </form>
+        {isLoading ? (
+          <div className="mt-4">Loading...</div>
+        ) : (
+          <div className="hero__movies__wrapper">
+            {movies.map((movie, index) => (
+              <div key={index} className="hero__movies__movie ">
+                <figure className="hero__movies__movie__poster__img__wrapper">
+                  <img
+                    className="hero__movies__movie__poster__img"
+                    src={movie.Poster}
+                    alt="Movie poster"
+                  />
+                </figure>
+                <div className="px-6 py-4">
+                  <div className="hero__movies__title text-center">
+                    {movie.Title}
+                  </div>
+                  <p className="hero__movies__year text-center">{movie.Year}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </header>
+    </section>
+  );
+}
