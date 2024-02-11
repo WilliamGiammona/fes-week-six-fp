@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Nav from "../nav/nav";
 
 interface Movie {
   Title: string;
@@ -44,20 +45,7 @@ export default function Home() {
 
   return (
     <section id="landing-page" className="landing-page">
-      <nav>
-        <figure className="nav__logo__img__wrapper">
-          <Image
-            src="https://dev.d24jig8s1lr7n9.amplifyapp.com/img/blinker-icon.4f9b2663.png"
-            alt="logo"
-            width={200}
-            height={50}
-            className="nav__logo__img"
-          />
-        </figure>
-        <ul className="nav__link__list">
-          <li className="nav__link">HOME</li>
-        </ul>
-      </nav>
+      <Nav />
       <header className="hero">
         <h1 className="hero__title ">Browse Our Movies</h1>
         <form className="hero__form" onSubmit={handleSubmit}>
