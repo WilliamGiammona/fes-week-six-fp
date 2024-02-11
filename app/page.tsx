@@ -43,58 +43,54 @@ export default function Home() {
   };
 
   return (
-    <section id="landing-page" className="min-h-screen bg-gray-100">
-      <nav className="flex justify-between items-center py-4 px-8">
-        <figure>
+    <section id="landing-page" className="landing-page">
+      <nav>
+        <figure className="nav__logo__img__wrapper">
           <Image
             src="https://dev.d24jig8s1lr7n9.amplifyapp.com/img/blinker-icon.4f9b2663.png"
             alt="logo"
             width={200}
             height={50}
+            className="nav__logo__img"
           />
         </figure>
-        <ul className="flex space-x-4">
-          <li className="text-gray-800">HOME</li>
+        <ul className="nav__link__list">
+          <li className="nav__link">HOME</li>
         </ul>
       </nav>
-      <header className="flex flex-col items-center justify-center">
-        <h1 className="text-3xl font-bold my-4">Browse Our Movies</h1>
-        <form className="flex flex-col items-center" onSubmit={handleSubmit}>
+      <header className="hero">
+        <h1 className="hero__title ">Browse Our Movies</h1>
+        <form className="hero__form" onSubmit={handleSubmit}>
           <input
             type="text"
             id="movieSearch"
-            className="form-input mt-1 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+            className="form__input"
             placeholder="Search by Title"
             value={movieSearch}
             onChange={(e) => setMovieSearch(e.target.value)}
           />
-          <button
-            type="submit"
-            className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600"
-          >
+          <button type="submit" className="form__submit__btn">
             Submit
           </button>
         </form>
         {isLoading ? (
           <div className="mt-4">Loading...</div>
         ) : (
-          <div className="mt-4 grid grid-cols-3 gap-4">
+          <div className="hero__movies__wrapper">
             {movies.map((movie, index) => (
-              <div
-                key={index}
-                className="max-w-sm rounded overflow-hidden shadow-lg"
-              >
-                <Image
-                  src={movie.Poster || "/no-image.png"}
-                  alt="Movie poster"
-                  width={500}
-                  height={750}
-                  layout="responsive"
-                  unoptimized={true}
-                />
+              <div key={index} className="hero__movies__movie ">
+                <figure className="hero__movies__movie__poster__img__wrapper">
+                  <img
+                    className="hero__movies__movie__poster__img"
+                    src={movie.Poster}
+                    alt="Movie poster"
+                  />
+                </figure>
                 <div className="px-6 py-4">
-                  <div className="font-bold text-xl mb-2">{movie.Title}</div>
-                  <p className="text-gray-700 text-base">{movie.Year}</p>
+                  <div className="hero__movies__title text-center">
+                    {movie.Title}
+                  </div>
+                  <p className="hero__movies__year text-center">{movie.Year}</p>
                 </div>
               </div>
             ))}
